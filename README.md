@@ -11,22 +11,42 @@ A comprehensive template for getting started with Context Engineering - the disc
 git clone https://github.com/coleam00/Context-Engineering-Intro.git
 cd Context-Engineering-Intro
 
-# 2. Set up your project rules (optional - template provided)
+# 2. Install dependencies
+npm install
+
+# 3. Start the development server
+npm run dev
+
+# 4. Set up your project rules (optional - template provided)
 # Edit CLAUDE.md to add your project-specific guidelines
 
-# 3. Add examples (highly recommended)
+# 5. Add examples (highly recommended)
 # Place relevant code examples in the examples/ folder
 
-# 4. Create your initial feature request
+# 6. Create your initial feature request
 # Edit INITIAL.md with your feature requirements
 
-# 5. Generate a comprehensive PRP (Product Requirements Prompt)
+# 7. Generate a comprehensive PRP (Product Requirements Prompt)
 # In Claude Code, run:
 /generate-prp INITIAL.md
 
-# 6. Execute the PRP to implement your feature
+# 8. Execute the PRP to implement your feature
 # In Claude Code, run:
 /execute-prp PRPs/your-feature-name.md
+```
+
+### Available Scripts
+
+```bash
+npm run dev         # Start development server
+npm run build       # Build for production
+npm run preview     # Preview production build
+npm run lint        # Run ESLint
+npm run typecheck   # Run TypeScript type checking
+npm run format      # Format code with Prettier
+npm run test        # Run tests with Vitest
+npm run test:ui     # Run tests with UI
+npm run test:coverage # Run tests with coverage
 ```
 
 ## 📚 Table of Contents
@@ -75,11 +95,27 @@ context-engineering-intro/
 │   ├── templates/
 │   │   └── prp_base.md       # Base template for PRPs
 │   └── EXAMPLE_multi_agent_prp.md  # Example of a complete PRP
-├── examples/                  # Your code examples (critical!)
-├── CLAUDE.md                 # Global rules for AI assistant
-├── INITIAL.md               # Template for feature requests
-├── INITIAL_EXAMPLE.md       # Example feature request
-└── README.md                # This file
+├── src/
+│   ├── components/           # React components
+│   ├── hooks/               # Custom React hooks
+│   ├── utils/               # Utility functions
+│   ├── types/               # TypeScript type definitions
+│   ├── styles/              # CSS/styling files
+│   ├── test/                # Test setup and utilities
+│   ├── App.tsx              # Main App component
+│   ├── main.tsx             # Application entry point
+│   └── vite-env.d.ts        # Vite type definitions
+├── examples/                # Your code examples (critical!)
+├── CLAUDE.md               # Global rules for AI assistant
+├── INITIAL.md              # Template for feature requests
+├── INITIAL_EXAMPLE.md      # Example feature request
+├── index.html              # HTML entry point
+├── package.json            # Node dependencies and scripts
+├── tsconfig.json           # TypeScript configuration
+├── vite.config.ts          # Vite configuration
+├── .eslintrc.cjs           # ESLint configuration
+├── .prettierrc             # Prettier configuration
+└── README.md               # This file
 ```
 
 This template doesn't focus on RAG and tools with context engineering because I have a LOT more in store for that soon. ;)
@@ -91,12 +127,12 @@ This template doesn't focus on RAG and tools with context engineering because I 
 The `CLAUDE.md` file contains project-wide rules that the AI assistant will follow in every conversation. The template includes:
 
 - **Project awareness**: Reading planning docs, checking tasks
-- **Code structure**: File size limits, module organization
-- **Testing requirements**: Unit test patterns, coverage expectations
-- **Style conventions**: Language preferences, formatting rules
-- **Documentation standards**: Docstring formats, commenting practices
+- **Code structure**: File size limits, component organization
+- **Testing requirements**: Vitest patterns, React Testing Library usage
+- **Style conventions**: TypeScript/React best practices, ESLint/Prettier
+- **Documentation standards**: JSDoc comments, code documentation
 
-**You can use the provided template as-is or customize it for your project.**
+**The template has been configured for React/TypeScript development.**
 
 ### 2. Create Your Initial Feature Request
 
@@ -252,15 +288,19 @@ The `examples/` folder is **critical** for success. AI coding assistants perform
 
 ```
 examples/
-├── README.md           # Explains what each example demonstrates
-├── cli.py             # CLI implementation pattern
-├── agent/             # Agent architecture patterns
-│   ├── agent.py      # Agent creation pattern
-│   ├── tools.py      # Tool implementation pattern
-│   └── providers.py  # Multi-provider pattern
-└── tests/            # Testing patterns
-    ├── test_agent.py # Unit test patterns
-    └── conftest.py   # Pytest configuration
+├── README.md                 # Explains what each example demonstrates
+├── components/               # Component patterns
+│   ├── Button.tsx           # Basic component example
+│   ├── Button.test.tsx      # Component testing example
+│   └── Form/                # Complex component pattern
+│       ├── Form.tsx
+│       └── Form.test.tsx
+├── hooks/                   # Custom hook patterns
+│   ├── useApi.ts           # API hook example
+│   └── useLocalStorage.ts  # Storage hook example
+└── utils/                   # Utility patterns
+    ├── validation.ts       # Validation utilities
+    └── validation.test.ts  # Utility testing
 ```
 
 ## Best Practices

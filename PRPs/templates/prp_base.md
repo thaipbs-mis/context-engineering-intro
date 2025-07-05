@@ -1,8 +1,8 @@
-name: "Base PRP Template v2 - Context-Rich with Validation Loops"
+name: "Base PRP Template v2 - Context-Rich with Validation Loops (React/TypeScript)"
 description: |
 
 ## Purpose
-Template optimized for AI agents to implement features with sufficient context and self-validation capabilities to achieve working code through iterative refinement.
+Template optimized for AI agents to implement React/TypeScript features with sufficient context and self-validation capabilities to achieve working code through iterative refinement.
 
 ## Core Principles
 1. **Context is King**: Include ALL necessary documentation, examples, and caveats
@@ -32,14 +32,14 @@ Template optimized for AI agents to implement features with sufficient context a
 ### Documentation & References (list all context needed to implement the feature)
 ```yaml
 # MUST READ - Include these in your context window
-- url: [Official API docs URL]
-  why: [Specific sections/methods you'll need]
+- url: [React documentation URL]
+  why: [Specific hooks/patterns you'll need]
   
-- file: [path/to/example.py]
+- file: [src/components/example.tsx]
   why: [Pattern to follow, gotchas to avoid]
   
 - doc: [Library documentation URL] 
-  section: [Specific section about common pitfalls]
+  section: [Specific section about TypeScript usage]
   critical: [Key insight that prevents common errors]
 
 - docfile: [PRPs/ai_docs/file.md]
@@ -58,24 +58,26 @@ Template optimized for AI agents to implement features with sufficient context a
 ```
 
 ### Known Gotchas of our codebase & Library Quirks
-```python
-# CRITICAL: [Library name] requires [specific setup]
-# Example: FastAPI requires async functions for endpoints
-# Example: This ORM doesn't support batch inserts over 1000 records
-# Example: We use pydantic v2 and  
+```typescript
+// CRITICAL: [Library name] requires [specific setup]
+// Example: React hooks must be called at the top level
+// Example: Vite requires .tsx extension for JSX content
+// Example: We use strict TypeScript - no implicit any
+// Example: State updates are batched in React 18
 ```
 
 ## Implementation Blueprint
 
-### Data models and structure
+### Type definitions and interfaces
 
-Create the core data models, we ensure type safety and consistency.
-```python
+Create the core TypeScript types and interfaces for type safety.
+```typescript
 Examples: 
- - orm models
- - pydantic models
- - pydantic schemas
- - pydantic validators
+ - Component prop interfaces
+ - API response types
+ - Redux/Context state types
+ - Custom hook return types
+ - Utility type helpers
 
 ```
 
@@ -83,15 +85,20 @@ Examples:
 
 ```yaml
 Task 1:
-MODIFY src/existing_module.py:
-  - FIND pattern: "class OldImplementation"
-  - INJECT after line containing "def __init__"
-  - PRESERVE existing method signatures
+MODIFY src/components/ExistingComponent.tsx:
+  - FIND pattern: "interface ComponentProps"
+  - ADD new prop to interface
+  - UPDATE component logic to use new prop
 
-CREATE src/new_feature.py:
-  - MIRROR pattern from: src/similar_feature.py
-  - MODIFY class name and core logic
-  - KEEP error handling pattern identical
+CREATE src/components/NewFeature/NewFeature.tsx:
+  - MIRROR pattern from: src/components/SimilarFeature/SimilarFeature.tsx
+  - MODIFY component name and core logic
+  - KEEP error boundary pattern identical
+
+CREATE src/hooks/useNewFeature.ts:
+  - FOLLOW pattern from: src/hooks/useApi.ts
+  - IMPLEMENT loading, error, and data states
+  - USE proper TypeScript generics
 
 ...(...)
 
@@ -102,42 +109,64 @@ Task N:
 
 
 ### Per task pseudocode as needed added to each task
-```python
+```typescript
 
-# Task 1
-# Pseudocode with CRITICAL details dont write entire code
-async def new_feature(param: str) -> Result:
-    # PATTERN: Always validate input first (see src/validators.py)
-    validated = validate_input(param)  # raises ValidationError
-    
-    # GOTCHA: This library requires connection pooling
-    async with get_connection() as conn:  # see src/db/pool.py
-        # PATTERN: Use existing retry decorator
-        @retry(attempts=3, backoff=exponential)
-        async def _inner():
-            # CRITICAL: API returns 429 if >10 req/sec
-            await rate_limiter.acquire()
-            return await external_api.call(validated)
-        
-        result = await _inner()
-    
-    # PATTERN: Standardized response format
-    return format_response(result)  # see src/utils/responses.py
+// Task 1 - Component Implementation
+// Pseudocode with CRITICAL details dont write entire code
+interface NewFeatureProps {
+  data: DataType;
+  onAction: (id: string) => void;
+}
+
+export const NewFeature: React.FC<NewFeatureProps> = ({ data, onAction }) => {
+  // PATTERN: Always use custom hooks for logic (see src/hooks/)
+  const { loading, error, processedData } = useNewFeature(data);
+  
+  // GOTCHA: Memoize expensive computations
+  const expensiveValue = useMemo(() => {
+    // PATTERN: See src/utils/calculations.ts
+    return calculateExpensive(processedData);
+  }, [processedData]);
+  
+  // PATTERN: Handle loading and error states first
+  if (loading) return <Spinner />; // see src/components/common/
+  if (error) return <ErrorMessage error={error} />;
+  
+  // CRITICAL: Event handlers should be memoized
+  const handleClick = useCallback((id: string) => {
+    // PATTERN: Validate before calling parent
+    if (isValidId(id)) {
+      onAction(id);
+    }
+  }, [onAction]);
+  
+  return (
+    // Component JSX following existing patterns
+  );
+};
 ```
 
 ### Integration Points
 ```yaml
-DATABASE:
-  - migration: "Add column 'feature_enabled' to users table"
-  - index: "CREATE INDEX idx_feature_lookup ON users(feature_id)"
+COMPONENTS:
+  - import in: src/App.tsx or relevant parent
+  - pattern: "import { NewFeature } from './components/NewFeature';"
   
-CONFIG:
-  - add to: config/settings.py
-  - pattern: "FEATURE_TIMEOUT = int(os.getenv('FEATURE_TIMEOUT', '30'))"
+TYPES:
+  - add to: src/types/index.ts
+  - pattern: "export interface FeatureData { ... }"
+  
+STATE:
+  - if using Context: src/contexts/AppContext.tsx
+  - if using Redux: src/store/slices/featureSlice.ts
   
 ROUTES:
-  - add to: src/api/routes.py  
-  - pattern: "router.include_router(feature_router, prefix='/feature')"
+  - add to: src/App.tsx or router config
+  - pattern: "<Route path='/feature' element={<NewFeature />} />"
+  
+API:
+  - add to: src/services/api.ts
+  - pattern: "export const fetchFeature = async (id: string): Promise<FeatureData> => { ... }"
 ```
 
 ## Validation Loop
@@ -145,61 +174,78 @@ ROUTES:
 ### Level 1: Syntax & Style
 ```bash
 # Run these FIRST - fix any errors before proceeding
-ruff check src/new_feature.py --fix  # Auto-fix what's possible
-mypy src/new_feature.py              # Type checking
+npm run lint                         # ESLint check
+npm run typecheck                    # TypeScript checking
+npm run format                       # Prettier formatting
 
 # Expected: No errors. If errors, READ the error and fix.
 ```
 
 ### Level 2: Unit Tests each new feature/file/function use existing test patterns
-```python
-# CREATE test_new_feature.py with these test cases:
-def test_happy_path():
-    """Basic functionality works"""
-    result = new_feature("valid_input")
-    assert result.status == "success"
+```typescript
+// CREATE NewFeature.test.tsx with these test cases:
+import { render, screen, fireEvent } from '@testing-library/react';
+import { vi } from 'vitest';
+import { NewFeature } from './NewFeature';
 
-def test_validation_error():
-    """Invalid input raises ValidationError"""
-    with pytest.raises(ValidationError):
-        new_feature("")
-
-def test_external_api_timeout():
-    """Handles timeouts gracefully"""
-    with mock.patch('external_api.call', side_effect=TimeoutError):
-        result = new_feature("valid")
-        assert result.status == "error"
-        assert "timeout" in result.message
+describe('NewFeature', () => {
+  it('renders with data correctly', () => {
+    const mockData = { id: '1', name: 'Test' };
+    render(<NewFeature data={mockData} onAction={vi.fn()} />);
+    
+    expect(screen.getByText('Test')).toBeInTheDocument();
+  });
+  
+  it('calls onAction when clicked', () => {
+    const onAction = vi.fn();
+    const mockData = { id: '1', name: 'Test' };
+    render(<NewFeature data={mockData} onAction={onAction} />);
+    
+    fireEvent.click(screen.getByRole('button'));
+    expect(onAction).toHaveBeenCalledWith('1');
+  });
+  
+  it('shows loading state', () => {
+    // Mock the hook to return loading state
+    vi.mock('./useNewFeature', () => ({
+      useNewFeature: () => ({ loading: true, error: null, data: null })
+    }));
+    
+    render(<NewFeature data={{}} onAction={vi.fn()} />);
+    expect(screen.getByTestId('spinner')).toBeInTheDocument();
+  });
+});
 ```
 
 ```bash
 # Run and iterate until passing:
-uv run pytest test_new_feature.py -v
+npm run test NewFeature.test.tsx
 # If failing: Read error, understand root cause, fix code, re-run (never mock to pass)
 ```
 
 ### Level 3: Integration Test
 ```bash
-# Start the service
-uv run python -m src.main --dev
+# Start the development server
+npm run dev
 
-# Test the endpoint
-curl -X POST http://localhost:8000/feature \
-  -H "Content-Type: application/json" \
-  -d '{"param": "test_value"}'
+# Test the component/page
+# Navigate to: http://localhost:5173/feature
+# Or test API integration:
+curl http://localhost:5173/api/feature/1
 
-# Expected: {"status": "success", "data": {...}}
-# If error: Check logs at logs/app.log for stack trace
+# Expected: Component renders with data
+# If error: Check browser console and network tab
 ```
 
 ## Final validation Checklist
-- [ ] All tests pass: `uv run pytest tests/ -v`
-- [ ] No linting errors: `uv run ruff check src/`
-- [ ] No type errors: `uv run mypy src/`
-- [ ] Manual test successful: [specific curl/command]
+- [ ] All tests pass: `npm run test`
+- [ ] No linting errors: `npm run lint`
+- [ ] No type errors: `npm run typecheck`
+- [ ] Build succeeds: `npm run build`
+- [ ] Manual test successful: Component renders and functions
 - [ ] Error cases handled gracefully
-- [ ] Logs are informative but not verbose
-- [ ] Documentation updated if needed
+- [ ] Accessibility checked (keyboard nav, screen reader)
+- [ ] Documentation/README updated if needed
 
 ---
 
@@ -207,6 +253,8 @@ curl -X POST http://localhost:8000/feature \
 - ❌ Don't create new patterns when existing ones work
 - ❌ Don't skip validation because "it should work"  
 - ❌ Don't ignore failing tests - fix them
-- ❌ Don't use sync functions in async context
-- ❌ Don't hardcode values that should be config
-- ❌ Don't catch all exceptions - be specific
+- ❌ Don't use any type - be specific with TypeScript
+- ❌ Don't hardcode values that should be props/env vars
+- ❌ Don't mutate state directly - use immutable updates
+- ❌ Don't forget to clean up effects (useEffect return)
+- ❌ Don't use index as key in dynamic lists

@@ -1,8 +1,8 @@
-name: "Multi-Agent System: Research Agent with Email Draft Sub-Agent"
+name: "React AI Assistant: Research Interface with Email Draft Component"
 description: |
 
 ## Purpose
-Build a Pydantic AI multi-agent system where a primary Research Agent uses Brave Search API and has an Email Draft Agent (using Gmail API) as a tool. This demonstrates agent-as-tool pattern with external API integrations.
+Build a React/TypeScript application with AI-powered research capabilities using OpenAI API and email draft generation. This demonstrates modern React patterns with AI integration, custom hooks, and component composition.
 
 ## Core Principles
 1. **Context is King**: Include ALL necessary documentation, examples, and caveats
@@ -13,25 +13,26 @@ Build a Pydantic AI multi-agent system where a primary Research Agent uses Brave
 ---
 
 ## Goal
-Create a production-ready multi-agent system where users can research topics via CLI, and the Research Agent can delegate email drafting tasks to an Email Draft Agent. The system should support multiple LLM providers and handle API authentication securely.
+Create a production-ready React application where users can research topics via a web interface, and the AI Assistant can generate email drafts based on research. The system should support streaming responses, error handling, and responsive design.
 
 ## Why
-- **Business value**: Automates research and email drafting workflows
-- **Integration**: Demonstrates advanced Pydantic AI multi-agent patterns
-- **Problems solved**: Reduces manual work for research-based email communications
+- **Business value**: Provides intuitive web interface for AI-powered research and communication
+- **Integration**: Demonstrates advanced React patterns with AI streaming
+- **Problems solved**: Reduces friction in research-based email workflows with modern UX
 
 ## What
-A CLI-based application where:
-- Users input research queries
-- Research Agent searches using Brave API
-- Research Agent can invoke Email Draft Agent to create Gmail drafts
-- Results stream back to the user in real-time
+A React web application where:
+- Users input research queries through a chat interface
+- AI searches using web search API integration
+- AI can generate email drafts based on research context
+- Results stream in real-time with loading states
+- Responsive design works on all devices
 
 ### Success Criteria
-- [ ] Research Agent successfully searches via Brave API
-- [ ] Email Agent creates Gmail drafts with proper authentication
-- [ ] Research Agent can invoke Email Agent as a tool
-- [ ] CLI provides streaming responses with tool visibility
+- [ ] Chat interface successfully sends queries to AI
+- [ ] AI responses stream with proper loading states
+- [ ] Email draft component generates and displays drafts
+- [ ] All components are properly typed with TypeScript
 - [ ] All tests pass and code meets quality standards
 
 ## All Needed Context
@@ -39,256 +40,427 @@ A CLI-based application where:
 ### Documentation & References
 ```yaml
 # MUST READ - Include these in your context window
-- url: https://ai.pydantic.dev/agents/
-  why: Core agent creation patterns
+- url: https://platform.openai.com/docs/api-reference/chat
+  why: OpenAI Chat API for streaming responses
   
-- url: https://ai.pydantic.dev/multi-agent-applications/
-  why: Multi-agent system patterns, especially agent-as-tool
+- url: https://react.dev/reference/react/use
+  why: React patterns for async data and streaming
   
-- url: https://developers.google.com/gmail/api/guides/sending
-  why: Gmail API authentication and draft creation
+- url: https://www.typescriptlang.org/docs/handbook/2/generics.html
+  why: TypeScript generics for type-safe hooks
   
-- url: https://api-dashboard.search.brave.com/app/documentation
-  why: Brave Search API REST endpoints
+- url: https://developer.mozilla.org/en-US/docs/Web/API/EventSource
+  why: Server-sent events for streaming responses
   
-- file: examples/agent/agent.py
-  why: Pattern for agent creation, tool registration, dependencies
+- file: examples/components/Button.tsx
+  why: Component pattern with TypeScript props
   
-- file: examples/agent/providers.py
-  why: Multi-provider LLM configuration pattern
+- file: examples/hooks/useApi.ts
+  why: Custom hook pattern for API calls
   
-- file: examples/cli.py
-  why: CLI structure with streaming responses and tool visibility
+- file: examples/utils/validation.ts
+  why: Form validation patterns
 
-- url: https://github.com/googleworkspace/python-samples/blob/main/gmail/snippet/send%20mail/create_draft.py
-  why: Official Gmail draft creation example
+- url: https://tailwindcss.com/docs/responsive-design
+  why: Responsive design patterns we'll use
 ```
 
 ### Current Codebase tree
 ```bash
 .
+├── src/
+│   ├── components/
+│   ├── hooks/
+│   ├── utils/
+│   ├── types/
+│   ├── App.tsx
+│   └── main.tsx
 ├── examples/
-│   ├── agent/
-│   │   ├── agent.py
-│   │   ├── providers.py
-│   │   └── ...
-│   └── cli.py
+│   ├── components/
+│   ├── hooks/
+│   └── utils/
 ├── PRPs/
 │   └── templates/
 │       └── prp_base.md
-├── INITIAL.md
-├── CLAUDE.md
-└── requirements.txt
+├── package.json
+├── tsconfig.json
+└── vite.config.ts
 ```
 
 ### Desired Codebase tree with files to be added
 ```bash
 .
-├── agents/
-│   ├── __init__.py               # Package init
-│   ├── research_agent.py         # Primary agent with Brave Search
-│   ├── email_agent.py           # Sub-agent with Gmail capabilities
-│   ├── providers.py             # LLM provider configuration
-│   └── models.py                # Pydantic models for data validation
-├── tools/
-│   ├── __init__.py              # Package init
-│   ├── brave_search.py          # Brave Search API integration
-│   └── gmail_tool.py            # Gmail API integration
-├── config/
-│   ├── __init__.py              # Package init
-│   └── settings.py              # Environment and config management
-├── tests/
-│   ├── __init__.py              # Package init
-│   ├── test_research_agent.py   # Research agent tests
-│   ├── test_email_agent.py      # Email agent tests
-│   ├── test_brave_search.py     # Brave search tool tests
-│   ├── test_gmail_tool.py       # Gmail tool tests
-│   └── test_cli.py              # CLI tests
-├── cli.py                       # CLI interface
-├── .env.example                 # Environment variables template
-├── requirements.txt             # Updated dependencies
-├── README.md                    # Comprehensive documentation
-└── credentials/.gitkeep         # Directory for Gmail credentials
+├── src/
+│   ├── components/
+│   │   ├── Chat/
+│   │   │   ├── Chat.tsx              # Main chat interface
+│   │   │   ├── Chat.test.tsx         # Chat component tests
+│   │   │   ├── ChatMessage.tsx       # Individual message component
+│   │   │   ├── ChatInput.tsx         # Input with submit handling
+│   │   │   └── index.ts              # Barrel export
+│   │   ├── EmailDraft/
+│   │   │   ├── EmailDraft.tsx        # Email draft display/edit
+│   │   │   ├── EmailDraft.test.tsx   # Email component tests
+│   │   │   ├── EmailForm.tsx         # Email form inputs
+│   │   │   └── index.ts              # Barrel export
+│   │   └── common/
+│   │       ├── LoadingSpinner.tsx    # Reusable spinner
+│   │       ├── ErrorBoundary.tsx     # Error handling wrapper
+│   │       └── index.ts              # Barrel exports
+│   ├── hooks/
+│   │   ├── useAIChat.ts              # AI chat state management
+│   │   ├── useStreamResponse.ts      # SSE streaming hook
+│   │   └── useEmailDraft.ts          # Email draft management
+│   ├── services/
+│   │   ├── ai.service.ts             # OpenAI API integration
+│   │   ├── search.service.ts         # Search API integration
+│   │   └── storage.service.ts        # Local storage helpers
+│   ├── types/
+│   │   ├── chat.types.ts             # Chat-related types
+│   │   ├── email.types.ts            # Email-related types
+│   │   └── index.ts                  # Type exports
+│   ├── utils/
+│   │   ├── streamParser.ts           # Parse SSE streams
+│   │   ├── sanitizer.ts              # Sanitize user input
+│   │   └── formatters.ts             # Format messages/dates
+│   ├── contexts/
+│   │   └── AppContext.tsx            # Global app state
+│   ├── styles/
+│   │   └── globals.css               # Global styles/animations
+│   └── App.tsx                       # Updated main app
+├── .env.example                      # Environment template
+├── README.md                         # Comprehensive docs
+└── vercel.json                       # Deployment config
 ```
 
 ### Known Gotchas & Library Quirks
-```python
-# CRITICAL: Pydantic AI requires async throughout - no sync functions in async context
-# CRITICAL: Gmail API requires OAuth2 flow on first run - credentials.json needed
-# CRITICAL: Brave API has rate limits - 2000 req/month on free tier
-# CRITICAL: Agent-as-tool pattern requires passing ctx.usage for token tracking
-# CRITICAL: Gmail drafts need base64 encoding with proper MIME formatting
-# CRITICAL: Always use absolute imports for cleaner code
-# CRITICAL: Store sensitive credentials in .env, never commit them
+```typescript
+// CRITICAL: OpenAI streaming requires EventSource polyfill for some browsers
+// CRITICAL: React 18 automatic batching affects streaming updates
+// CRITICAL: TypeScript strict mode - no implicit any allowed
+// CRITICAL: Tailwind purges unused styles - use full class names
+// CRITICAL: Vite env vars must be prefixed with VITE_
+// CRITICAL: Always cleanup EventSource connections in useEffect
+// CRITICAL: Use AbortController for cancelling API requests
 ```
 
 ## Implementation Blueprint
 
-### Data models and structure
+### Type definitions and interfaces
 
-```python
-# models.py - Core data structures
-from pydantic import BaseModel, Field
-from typing import List, Optional
-from datetime import datetime
+```typescript
+// types/chat.types.ts - Core chat types
+export interface Message {
+  id: string;
+  role: 'user' | 'assistant' | 'system';
+  content: string;
+  timestamp: Date;
+  metadata?: {
+    model?: string;
+    tokens?: number;
+  };
+}
 
-class ResearchQuery(BaseModel):
-    query: str = Field(..., description="Research topic to investigate")
-    max_results: int = Field(10, ge=1, le=50)
-    include_summary: bool = Field(True)
+export interface ChatSession {
+  id: string;
+  messages: Message[];
+  createdAt: Date;
+  updatedAt: Date;
+}
 
-class BraveSearchResult(BaseModel):
-    title: str
-    url: str
-    description: str
-    score: float = Field(0.0, ge=0.0, le=1.0)
+// types/email.types.ts - Email types
+export interface EmailDraft {
+  id: string;
+  to: string[];
+  cc?: string[];
+  bcc?: string[];
+  subject: string;
+  body: string;
+  attachments?: Attachment[];
+  createdAt: Date;
+}
 
-class EmailDraft(BaseModel):
-    to: List[str] = Field(..., min_items=1)
-    subject: str = Field(..., min_length=1)
-    body: str = Field(..., min_length=1)
-    cc: Optional[List[str]] = None
-    bcc: Optional[List[str]] = None
+export interface EmailFormData {
+  to: string;
+  subject: string;
+  body: string;
+  basedOn?: string; // Research context
+}
 
-class ResearchEmailRequest(BaseModel):
-    research_query: str
-    email_context: str = Field(..., description="Context for email generation")
-    recipient_email: str
+// types/index.ts - Utility types
+export type AsyncState<T> = {
+  data: T | null;
+  loading: boolean;
+  error: Error | null;
+};
 ```
 
 ### List of tasks to be completed
 
 ```yaml
-Task 1: Setup Configuration and Environment
-CREATE config/settings.py:
-  - PATTERN: Use pydantic-settings like examples use os.getenv
-  - Load environment variables with defaults
-  - Validate required API keys present
-
+Task 1: Setup Environment and Configuration
 CREATE .env.example:
-  - Include all required environment variables with descriptions
-  - Follow pattern from examples/README.md
+  - Include VITE_OPENAI_API_KEY placeholder
+  - Add VITE_SEARCH_API_KEY placeholder
+  - Follow Vite env var naming convention
 
-Task 2: Implement Brave Search Tool
-CREATE tools/brave_search.py:
-  - PATTERN: Async functions like examples/agent/tools.py
-  - Simple REST client using httpx (already in requirements)
-  - Handle rate limits and errors gracefully
-  - Return structured BraveSearchResult models
+UPDATE src/services/ai.service.ts:
+  - Create OpenAI client singleton
+  - Handle API key from env vars
+  - Implement streaming chat method
 
-Task 3: Implement Gmail Tool
-CREATE tools/gmail_tool.py:
-  - PATTERN: Follow OAuth2 flow from Gmail quickstart
-  - Store token.json in credentials/ directory
-  - Create draft with proper MIME encoding
-  - Handle authentication refresh automatically
+Task 2: Create Chat Components
+CREATE src/components/Chat/Chat.tsx:
+  - PATTERN: Follow examples/components patterns
+  - Use useAIChat hook for state
+  - Implement auto-scroll to bottom
+  - Handle loading and error states
 
-Task 4: Create Email Draft Agent
-CREATE agents/email_agent.py:
-  - PATTERN: Follow examples/agent/agent.py structure
-  - Use Agent with deps_type pattern
-  - Register gmail_tool as @agent.tool
-  - Return EmailDraft model
+CREATE src/components/Chat/ChatMessage.tsx:
+  - PATTERN: Memoize with React.memo
+  - Render markdown content
+  - Show timestamp and metadata
+  - Support copy-to-clipboard
 
-Task 5: Create Research Agent
-CREATE agents/research_agent.py:
-  - PATTERN: Multi-agent pattern from Pydantic AI docs
-  - Register brave_search as tool
-  - Register email_agent.run() as tool
-  - Use RunContext for dependency injection
+CREATE src/components/Chat/ChatInput.tsx:
+  - PATTERN: Controlled component
+  - Handle Enter key submission
+  - Show character count
+  - Disable during loading
 
-Task 6: Implement CLI Interface
-CREATE cli.py:
-  - PATTERN: Follow examples/cli.py streaming pattern
-  - Color-coded output with tool visibility
-  - Handle async properly with asyncio.run()
-  - Session management for conversation context
+Task 3: Implement AI Hooks
+CREATE src/hooks/useAIChat.ts:
+  - PATTERN: Follow useApi.ts structure
+  - Manage messages array state
+  - Handle streaming responses
+  - Implement retry logic
 
-Task 7: Add Comprehensive Tests
-CREATE tests/:
-  - PATTERN: Mirror examples test structure
-  - Mock external API calls
-  - Test happy path, edge cases, errors
-  - Ensure 80%+ coverage
+CREATE src/hooks/useStreamResponse.ts:
+  - Use EventSource for SSE
+  - Parse streaming JSON chunks
+  - Handle connection errors
+  - Cleanup on unmount
 
-Task 8: Create Documentation
-CREATE README.md:
-  - PATTERN: Follow examples/README.md structure
-  - Include setup, installation, usage
-  - API key configuration steps
-  - Architecture diagram
+Task 4: Create Email Draft Components
+CREATE src/components/EmailDraft/EmailDraft.tsx:
+  - PATTERN: Component composition
+  - Display formatted email
+  - Edit mode with form
+  - Copy to clipboard action
+
+CREATE src/components/EmailDraft/EmailForm.tsx:
+  - PATTERN: Form validation from examples
+  - Validate email addresses
+  - Auto-save to localStorage
+  - Clear form action
+
+Task 5: Implement Services
+CREATE src/services/ai.service.ts:
+  - Singleton pattern for API client
+  - Stream chat completions
+  - Handle rate limits
+  - Format for frontend consumption
+
+CREATE src/services/storage.service.ts:
+  - Type-safe localStorage wrapper
+  - Handle JSON serialization
+  - Implement session storage
+  - Add migration logic
+
+Task 6: Add Global Context
+CREATE src/contexts/AppContext.tsx:
+  - PATTERN: Context + useReducer
+  - Manage chat sessions
+  - Store email drafts
+  - Handle theme preferences
+
+Task 7: Update Main App
+UPDATE src/App.tsx:
+  - Add routing if needed
+  - Wrap with ErrorBoundary
+  - Include global styles
+  - Setup context providers
+
+Task 8: Add Comprehensive Tests
+CREATE tests for all components:
+  - PATTERN: Testing Library best practices
+  - Mock API responses
+  - Test error states
+  - Ensure accessibility
+
+Task 9: Create Documentation
+UPDATE README.md:
+  - Setup instructions
+  - API key configuration
+  - Development workflow
+  - Deployment guide
 ```
 
 ### Per task pseudocode
 
-```python
-# Task 2: Brave Search Tool
-async def search_brave(query: str, api_key: str, count: int = 10) -> List[BraveSearchResult]:
-    # PATTERN: Use httpx like examples use aiohttp
-    async with httpx.AsyncClient() as client:
-        headers = {"X-Subscription-Token": api_key}
-        params = {"q": query, "count": count}
-        
-        # GOTCHA: Brave API returns 401 if API key invalid
-        response = await client.get(
-            "https://api.search.brave.com/res/v1/web/search",
-            headers=headers,
-            params=params,
-            timeout=30.0  # CRITICAL: Set timeout to avoid hanging
-        )
-        
-        # PATTERN: Structured error handling
-        if response.status_code != 200:
-            raise BraveAPIError(f"API returned {response.status_code}")
-        
-        # Parse and validate with Pydantic
-        data = response.json()
-        return [BraveSearchResult(**result) for result in data.get("web", {}).get("results", [])]
+```typescript
+// Task 3: useAIChat Hook Implementation
+// Pseudocode with CRITICAL details
+interface UseAIChatReturn {
+  messages: Message[];
+  sendMessage: (content: string) => Promise<void>;
+  loading: boolean;
+  error: Error | null;
+  clearMessages: () => void;
+}
 
-# Task 5: Research Agent with Email Agent as Tool
-@research_agent.tool
-async def create_email_draft(
-    ctx: RunContext[AgentDependencies],
-    recipient: str,
-    subject: str,
-    context: str
-) -> str:
-    """Create email draft based on research context."""
-    # CRITICAL: Pass usage for token tracking
-    result = await email_agent.run(
-        f"Create an email to {recipient} about: {context}",
-        deps=EmailAgentDeps(subject=subject),
-        usage=ctx.usage  # PATTERN from multi-agent docs
-    )
+export function useAIChat(): UseAIChatReturn {
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<Error | null>(null);
+  const abortControllerRef = useRef<AbortController | null>(null);
+  
+  const sendMessage = useCallback(async (content: string) => {
+    // PATTERN: Optimistic update
+    const userMessage: Message = {
+      id: generateId(),
+      role: 'user',
+      content,
+      timestamp: new Date()
+    };
     
-    return f"Draft created with ID: {result.data}"
+    setMessages(prev => [...prev, userMessage]);
+    setLoading(true);
+    setError(null);
+    
+    // CRITICAL: Cancel any ongoing request
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
+    }
+    abortControllerRef.current = new AbortController();
+    
+    try {
+      // PATTERN: Streaming response handling
+      const stream = await aiService.streamChat(
+        messages.concat(userMessage),
+        { signal: abortControllerRef.current.signal }
+      );
+      
+      let assistantMessage: Message = {
+        id: generateId(),
+        role: 'assistant',
+        content: '',
+        timestamp: new Date()
+      };
+      
+      setMessages(prev => [...prev, assistantMessage]);
+      
+      // CRITICAL: Handle streaming chunks
+      for await (const chunk of stream) {
+        assistantMessage.content += chunk;
+        // GOTCHA: React 18 batches these updates
+        setMessages(prev => 
+          prev.map(msg => 
+            msg.id === assistantMessage.id 
+              ? { ...msg, content: assistantMessage.content }
+              : msg
+          )
+        );
+      }
+    } catch (err) {
+      // PATTERN: Differentiate error types
+      if (err.name !== 'AbortError') {
+        setError(err);
+      }
+    } finally {
+      setLoading(false);
+    }
+  }, [messages]);
+  
+  // CRITICAL: Cleanup on unmount
+  useEffect(() => {
+    return () => {
+      if (abortControllerRef.current) {
+        abortControllerRef.current.abort();
+      }
+    };
+  }, []);
+  
+  return { messages, sendMessage, loading, error, clearMessages };
+}
+
+// Task 4: Email Draft Component
+interface EmailDraftProps {
+  initialData?: Partial<EmailDraft>;
+  onSave: (draft: EmailDraft) => void;
+  context?: string; // Research context
+}
+
+export const EmailDraft: React.FC<EmailDraftProps> = ({ 
+  initialData, 
+  onSave, 
+  context 
+}) => {
+  // PATTERN: Memoize expensive computations
+  const suggestedContent = useMemo(() => {
+    if (!context) return null;
+    return generateEmailFromContext(context);
+  }, [context]);
+  
+  // PATTERN: Form state management
+  const {
+    formData,
+    errors,
+    handleChange,
+    handleSubmit,
+    isValid
+  } = useEmailForm(initialData);
+  
+  // CRITICAL: Auto-save functionality
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      if (formData && isValid) {
+        localStorage.setItem('emailDraft', JSON.stringify(formData));
+      }
+    }, 1000);
+    
+    return () => clearTimeout(timeoutId);
+  }, [formData, isValid]);
+  
+  return (
+    <div className="email-draft-container">
+      {/* Component JSX */}
+    </div>
+  );
+};
 ```
 
 ### Integration Points
 ```yaml
-ENVIRONMENT:
-  - add to: .env
-  - vars: |
-      # LLM Configuration
-      LLM_PROVIDER=openai
-      LLM_API_KEY=sk-...
-      LLM_MODEL=gpt-4
-      
-      # Brave Search
-      BRAVE_API_KEY=BSA...
-      
-      # Gmail (path to credentials.json)
-      GMAIL_CREDENTIALS_PATH=./credentials/credentials.json
-      
-CONFIG:
-  - Gmail OAuth: First run opens browser for authorization
-  - Token storage: ./credentials/token.json (auto-created)
+COMPONENTS:
+  - import in: src/App.tsx
+  - pattern: |
+      import { Chat } from './components/Chat';
+      import { EmailDraft } from './components/EmailDraft';
   
-DEPENDENCIES:
-  - Update requirements.txt with:
-    - google-api-python-client
-    - google-auth-httplib2
-    - google-auth-oauthlib
+STATE:
+  - Context Provider: src/contexts/AppContext.tsx
+  - pattern: |
+      <AppProvider>
+        <App />
+      </AppProvider>
+  
+SERVICES:
+  - API configuration: src/services/ai.service.ts
+  - pattern: |
+      const API_KEY = import.meta.env.VITE_OPENAI_API_KEY;
+      if (!API_KEY) throw new Error('API key required');
+  
+STYLES:
+  - Tailwind classes throughout
+  - Global styles in src/styles/globals.css
+  - Component-specific styles co-located
+  
+ROUTING (if needed):
+  - React Router in App.tsx
+  - pattern: |
+      <Route path="/" element={<Chat />} />
+      <Route path="/drafts" element={<EmailDrafts />} />
 ```
 
 ## Validation Loop
@@ -296,100 +468,135 @@ DEPENDENCIES:
 ### Level 1: Syntax & Style
 ```bash
 # Run these FIRST - fix any errors before proceeding
-ruff check . --fix              # Auto-fix style issues
-mypy .                          # Type checking
+npm run lint                    # ESLint with React rules
+npm run typecheck              # TypeScript strict mode
+npm run format                 # Prettier formatting
 
 # Expected: No errors. If errors, READ and fix.
 ```
 
 ### Level 2: Unit Tests
-```python
-# test_research_agent.py
-async def test_research_with_brave():
-    """Test research agent searches correctly"""
-    agent = create_research_agent()
-    result = await agent.run("AI safety research")
-    assert result.data
-    assert len(result.data) > 0
+```typescript
+// Chat.test.tsx
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import { Chat } from './Chat';
 
-async def test_research_creates_email():
-    """Test research agent can invoke email agent"""
-    agent = create_research_agent()
-    result = await agent.run(
-        "Research AI safety and draft email to john@example.com"
-    )
-    assert "draft_id" in result.data
+describe('Chat Component', () => {
+  it('sends message on submit', async () => {
+    const user = userEvent.setup();
+    render(<Chat />);
+    
+    const input = screen.getByPlaceholderText('Type your message...');
+    const button = screen.getByRole('button', { name: 'Send' });
+    
+    await user.type(input, 'Test message');
+    await user.click(button);
+    
+    await waitFor(() => {
+      expect(screen.getByText('Test message')).toBeInTheDocument();
+    });
+  });
+  
+  it('shows loading state during API call', async () => {
+    render(<Chat />);
+    const input = screen.getByPlaceholderText('Type your message...');
+    
+    fireEvent.change(input, { target: { value: 'Test' } });
+    fireEvent.submit(input.closest('form')!);
+    
+    expect(screen.getByTestId('loading-spinner')).toBeInTheDocument();
+  });
+  
+  it('handles API errors gracefully', async () => {
+    // Mock API to return error
+    vi.mock('../services/ai.service', () => ({
+      streamChat: vi.fn().mockRejectedValue(new Error('API Error'))
+    }));
+    
+    render(<Chat />);
+    // ... test error handling
+  });
+});
 
-# test_email_agent.py  
-def test_gmail_authentication(monkeypatch):
-    """Test Gmail OAuth flow handling"""
-    monkeypatch.setenv("GMAIL_CREDENTIALS_PATH", "test_creds.json")
-    tool = GmailTool()
-    assert tool.service is not None
+// useAIChat.test.ts
+import { renderHook, act } from '@testing-library/react';
+import { useAIChat } from './useAIChat';
 
-async def test_create_draft():
-    """Test draft creation with proper encoding"""
-    agent = create_email_agent()
-    result = await agent.run(
-        "Create email to test@example.com about AI research"
-    )
-    assert result.data.get("draft_id")
+describe('useAIChat Hook', () => {
+  it('adds user message optimistically', async () => {
+    const { result } = renderHook(() => useAIChat());
+    
+    act(() => {
+      result.current.sendMessage('Hello AI');
+    });
+    
+    expect(result.current.messages).toHaveLength(1);
+    expect(result.current.messages[0].role).toBe('user');
+  });
+});
 ```
 
 ```bash
 # Run tests iteratively until passing:
-pytest tests/ -v --cov=agents --cov=tools --cov-report=term-missing
+npm run test
+# Or watch mode:
+npm run test -- --watch
 
-# If failing: Debug specific test, fix code, re-run
+# Check coverage:
+npm run test:coverage
 ```
 
 ### Level 3: Integration Test
 ```bash
-# Test CLI interaction
-python cli.py
+# Start dev server
+npm run dev
 
-# Expected interaction:
-# You: Research latest AI safety developments
-# 🤖 Assistant: [Streams research results]
-# 🛠 Tools Used:
-#   1. brave_search (query='AI safety developments', limit=10)
-#
-# You: Create an email draft about this to john@example.com  
-# 🤖 Assistant: [Creates draft]
-# 🛠 Tools Used:
-#   1. create_email_draft (recipient='john@example.com', ...)
+# Manual testing checklist:
+# 1. Open http://localhost:5173
+# 2. Type a research query
+# 3. Verify streaming response appears
+# 4. Click "Generate Email Draft"
+# 5. Verify email form populates
+# 6. Test form validation
+# 7. Check responsive design on mobile
+# 8. Test error states (invalid API key)
 
-# Check Gmail drafts folder for created draft
+# E2E test with Playwright (if configured):
+npm run test:e2e
 ```
 
-## Final Validation Checklist
-- [ ] All tests pass: `pytest tests/ -v`
-- [ ] No linting errors: `ruff check .`
-- [ ] No type errors: `mypy .`
-- [ ] Gmail OAuth flow works (browser opens, token saved)
-- [ ] Brave Search returns results
-- [ ] Research Agent invokes Email Agent successfully
-- [ ] CLI streams responses with tool visibility
-- [ ] Error cases handled gracefully
-- [ ] README includes clear setup instructions
-- [ ] .env.example has all required variables
+## Final validation Checklist
+- [ ] All tests pass: `npm run test`
+- [ ] No linting errors: `npm run lint`
+- [ ] No type errors: `npm run typecheck`
+- [ ] Build succeeds: `npm run build`
+- [ ] Streaming responses work smoothly
+- [ ] Email drafts generate correctly
+- [ ] Error states show user-friendly messages
+- [ ] Responsive design works on mobile
+- [ ] Accessibility audit passes
+- [ ] README includes setup instructions
+- [ ] .env.example has all required vars
 
 ---
 
 ## Anti-Patterns to Avoid
-- ❌ Don't hardcode API keys - use environment variables
-- ❌ Don't use sync functions in async agent context
-- ❌ Don't skip OAuth flow setup for Gmail
-- ❌ Don't ignore rate limits for APIs
-- ❌ Don't forget to pass ctx.usage in multi-agent calls
-- ❌ Don't commit credentials.json or token.json files
+- ❌ Don't hardcode API keys - use env vars
+- ❌ Don't use any type - be specific with TypeScript
+- ❌ Don't forget to cleanup EventSource/AbortController
+- ❌ Don't mutate state directly in React
+- ❌ Don't skip loading/error states
+- ❌ Don't use index as key in dynamic lists
+- ❌ Don't forget ARIA labels for accessibility
+- ❌ Don't block UI during API calls
 
 ## Confidence Score: 9/10
 
 High confidence due to:
-- Clear examples to follow from the codebase
-- Well-documented external APIs
-- Established patterns for multi-agent systems
-- Comprehensive validation gates
+- Clear React patterns from examples
+- Well-documented OpenAI streaming API
+- Established TypeScript patterns
+- Comprehensive test coverage approach
 
-Minor uncertainty on Gmail OAuth first-time setup UX, but documentation provides clear guidance.
+Minor uncertainty on optimal streaming chunk size for UX, but can be tuned based on user feedback.
